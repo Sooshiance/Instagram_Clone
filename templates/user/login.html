@@ -1,0 +1,23 @@
+{% extends 'root.html' %}
+
+
+{% block title %}
+    
+{% endblock title %}
+
+
+{% block doc %}
+<form action="{% url 'LOGIN' %}" method="post">
+    <label for="text">
+        Username
+    </label>
+    <input type="text" name="username">
+    <br>
+    <label for="password">
+        password
+    </label>
+    <input type="password" name="password">
+    {% csrf_token %}
+    <input type="submit" value="submit">
+</form>
+{% endblock doc %}
