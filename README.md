@@ -2,7 +2,7 @@
 
 Here I am trying to create a platform similar to Instagram with `Django rest api` & `Reactjs`.
 
-<img src="./preview/Insta.jpg >
+<img src="./preview/Insta.jpg" />
 
 <h2>
 Table of contents:
