@@ -89,20 +89,6 @@ DATABASES = {
         "USER": config("DEFAULT_DB_USER"),
         "PASSWORD": config("DEFAULT_DB_PASSWORD"),
     },
-    "post_db": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("POST_DB_NAME"),
-        'HOST': config('POST_DB_HOST'),
-        "USER": config("POST_DB_USER"),
-        "PASSWORD": config("POST_DB_PASSWORD"),
-    },
-    "story_db": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("STORY_DB_NAME"),
-        'HOST': config('STORY_DB_HOST'),
-        "USER": config("STORY_DB_USER"),
-        "PASSWORD": config("STORY_DB_PASSWORD"),
-    },
 }
 
 
@@ -146,6 +132,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+AUTH_USER_MODEL = "user.User"
 
 
 MEDIA_URL  = '/media/'
