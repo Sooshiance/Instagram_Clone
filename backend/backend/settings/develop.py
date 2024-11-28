@@ -1,4 +1,6 @@
+import os
 from pathlib import Path
+from datetime import timedelta
 
 from decouple import config
 
@@ -25,11 +27,26 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third party apps
+    'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
+    'django_filters',
+    'corsheaders',
+
+    # Local apps
+    'user.apps.UserConfig',
+    'follow.apps.FollowConfig',
+    'post.apps.PostConfig',
+    'story.apps.StoryConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -58,14 +75,34 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
-# Database
+# TODO: Database
+# TODO: We will have multiple databases
+# TODO: I will only use `Postgres`, you can use other databases
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+# https://docs.djangoproject.com/en/5.0/topics/db/multi-db/
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DEFAULT_DB_NAME"),
+        'HOST': config('DEFAULT_DB_HOST'),
+        "USER": config("DEFAULT_DB_USER"),
+        "PASSWORD": config("DEFAULT_DB_PASSWORD"),
+    },
+    "post_db": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("POST_DB_NAME"),
+        'HOST': config('POST_DB_HOST'),
+        "USER": config("POST_DB_USER"),
+        "PASSWORD": config("POST_DB_PASSWORD"),
+    },
+    "story_db": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("STORY_DB_NAME"),
+        'HOST': config('STORY_DB_HOST'),
+        "USER": config("STORY_DB_USER"),
+        "PASSWORD": config("STORY_DB_PASSWORD"),
+    },
 }
 
 
@@ -109,3 +146,87 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+MEDIA_URL  = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
+
+
+STATIC_URL = 'static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+# STATIC_ROOT = (os.path.join(BASE_DIR, 'ui'),)
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_PORT = 587
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+
+# TODO: Cache the requests
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': config('REDIS_URL', 'redis://127.0.0.1:6379/1'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+
+# TODO: Change this value based on your servers and requirements
+CACHE_TTL = 60 * 15
+
+
+# TODO : React development mode
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    
+    "http://192.168.1.53:3000",
+]
+CORS_ALLOW_CREDENTIALS = True
+
+
+# TODO : Rest framework configurations
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+}
+
+
+# TODO : JSON Web Token configurations for develop mode
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+}
+
+
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "file": {
+#             "level": "DEBUG",
+#             "class": "logging.FileHandler",
+#             "filename": "/path/to/django/debug.log",
+#         },
+#     },
+#     "loggers": {
+#         "django": {
+#             "handlers": ["file"],
+#             "level": "DEBUG",
+#             "propagate": True,
+#         },
+#     },
+# }
