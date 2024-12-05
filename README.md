@@ -12,22 +12,36 @@ Table of contents:
 
 <a href="#technology stacks">Technology Stack</a>  
 
+<a href="#demo">Dome</a>
+
 <a href="#setup">Setup</a>  
 
 <a href="#backend">Backend Documentation</a>  
 
 <a href="#frontend">Frontend Documentation</a>  
 
-<a href="#contributing">Contributing</a>  
+<a href="testing">Testing</a>
+
+<a href="#contributing">Contributing</a> 
+
+<a href="faq">FAQ</a>
 
 ## Features
 
-# Technology Stacks
+## Technology Stacks
 
-# Setup
+## Demo
 
-# Backend
+Here are some pictures from its demo:
 
-# Frontend
+## Setup
 
-# Contributing
+## Backend
+
+## Frontend
+
+## Testing
+
+## Contributing
+
+## FAQ
