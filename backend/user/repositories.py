@@ -1,3 +1,5 @@
+from rest_framework.exceptions import ValidationError
+
 from .models import User, OTP, Profile
 
 
@@ -8,11 +10,17 @@ class UserRepository:
 
     @staticmethod
     def get_user_by_username(username):
-        return User.objects.get(username=username)
+        try:
+            return User.objects.get(username=username)
+        except Exception as e:
+            raise ValidationError(e)
 
     @staticmethod
     def get_user_by_id(user_id):
-        return User.objects.get(uid=user_id)
+        try:
+            return User.objects.get(pk=user_id)
+        except Exception as e:
+            raise ValidationError(e)
 
 
 class OTPRepository:

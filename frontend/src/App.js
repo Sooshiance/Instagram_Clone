@@ -1,26 +1,39 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import Home from './components/Home/Home';
+import Login from './components/Auth/Login';
+import Profile from './components/Client/Profile';
+import Register from './components/Auth/Register';
+import Logout from './components/Auth/Logout';
+import OTPRequest from './components/Auth/OTPRequest';
+import OTPVerify from './components/Auth/OTPVerify';
+import PasswordReset from './components/Auth/PasswordReset';
+import NoPage from './components/NoPage';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
-    <div className="App">
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
+    <div className="App ">
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/request-otp" element={<OTPRequest />} />
+        <Route path="/verify-otp" element={<OTPVerify />} />
+        <Route path="/password-reset" element={<PasswordReset />} />
+        <Route path="/logout" element={
+          <PrivateRoute>
+            <Logout />
+          </PrivateRoute>
+        } />
+        <Route path="/profile" element={
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        } />
+        <Route path='*' element={<NoPage />} />
+      </Routes>
     </div>
   );
 }

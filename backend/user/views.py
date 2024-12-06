@@ -44,6 +44,7 @@ class VerifyOTPView(APIView):
 class PasswordResetView(APIView):
     def post(self, request):
         if UserService.reset_password(request.data['username'], request.data['otp'], request.data['new_password']):
+            
             return Response({"message": "Password reset successfully"}, status=status.HTTP_200_OK)
         return Response({"message": "Invalid OTP or username"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -57,6 +58,6 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
             user = self.request.user
             my_user = User.objects.get(username=user)
             profile = Profile.objects.get(user=my_user)
+            return profile
         except:
             ValidationError("User Not Found!")
-        return profile

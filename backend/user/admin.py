@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from .models import User, Profile
+from .models import User, Profile, OTP
 
 
 class UserAdmin(BaseUserAdmin):
@@ -21,3 +21,4 @@ admin.site.register(User, UserAdmin)
 
 admin.site.register(Profile, ProfileAdmin)
 
+admin.site.register(OTP)

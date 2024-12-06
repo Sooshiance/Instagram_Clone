@@ -8,7 +8,7 @@ from .models import User, Profile
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['uid', 'username', 'id']
+        fields = ['username', 'pk']
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -18,9 +18,24 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
     class Meta:
         model = Profile
-        fields = "__all__"
+        fields = [
+            'pk',
+            'user',
+            'username',
+            'email',
+            'phone',
+            'first_name',
+            'last_name',
+            'bio',
+            'profile_picture',
+            'website',
+            'location',
+            'birth_date',
+        ]
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -29,5 +44,4 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user: User) -> Token:
         token = super().get_token(user)
         token['username'] = user.username
-        token['uid'] = user.uid
         return token

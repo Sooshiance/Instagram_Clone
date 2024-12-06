@@ -171,16 +171,6 @@ CACHES = {
 CACHE_TTL = 60 * 15
 
 
-# TODO : React development mode
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
-    
-    "http://192.168.1.53:3000",
-]
-CORS_ALLOW_CREDENTIALS = True
-
-
 # TODO : Rest framework configurations
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -189,7 +179,6 @@ REST_FRAMEWORK = {
 
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
     ],
 }
 
@@ -199,6 +188,16 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
 }
+
+
+# TODO : React development mode
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    
+    "http://192.168.1.53:3000",
+]
+CORS_ALLOW_CREDENTIALS = True
 
 
 # LOGGING = {

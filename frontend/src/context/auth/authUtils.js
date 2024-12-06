@@ -14,7 +14,6 @@ export const fetchWithAuth = async (endpoint, navigate) => {
     } catch (error) {
         if (error.response && error.response.status === 401) {
             navigate('/login');
-        } else {
             console.error("Failed to fetch data:", error);
         }
         throw error;
@@ -34,7 +33,6 @@ export const sendWithAuth = async (endpoint, navigate, data) => {
     } catch (error) {
         if (error.response && error.response.status === 401) {
             navigate('/login');
-        } else {
             console.error("Failed to send data:", error);
         }
         throw error;
