@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home/Home';
 import Login from './components/Auth/Login';
 import Profile from './components/Client/Profile';
+import UpdateProfile from './components/Client/UpdateProfile';
 import Register from './components/Auth/Register';
 import Logout from './components/Auth/Logout';
 import OTPRequest from './components/Auth/OTPRequest';
@@ -30,6 +31,11 @@ function App() {
         <Route path="/profile" element={
           <PrivateRoute>
             <Profile />
+          </PrivateRoute>
+        } />
+        <Route path="/update-profile" element={
+          <PrivateRoute>
+            <UpdateProfile />
           </PrivateRoute>
         } />
         <Route path='*' element={<NoPage />} />

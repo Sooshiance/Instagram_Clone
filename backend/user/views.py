@@ -61,3 +61,16 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
             return profile
         except:
             ValidationError("User Not Found!")
+
+
+class UpdateProfileAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request):
+        profile = self.request.user.profile  # Get the profile instance of the authenticated user
+        srz = ProfileSerializer(profile, data=request.data, partial=True)  # Pass the instance to the serializer
+        if not srz.is_valid():
+            print(srz.errors)
+            return Response(srz.errors, status=status.HTTP_400_BAD_REQUEST)
+        srz.save()
+        return Response(srz.data, status=status.HTTP_200_OK)
