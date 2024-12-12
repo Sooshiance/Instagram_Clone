@@ -5,12 +5,26 @@ from rest_framework.exceptions import ValidationError
 from .models import (Post,
                      Comment,
                      Album,
+                     Like,
+                     User
 )
+
+
+class LikeRepository:
+    @staticmethod
+    def get_like(user:User, post:Post)->bool:
+        return Like.objects.filter(user=user, post=post).exists()
+    
+    @staticmethod
+    def create_like_user(user:User, post:Post)->Like:
+        if __class__.get_like(user, post):
+            raise ValidationError("You have already liked this post.")
+        return Like.objects.create(user=user, post=post).save()
 
 
 class PostRepository:
     @staticmethod
-    def create_post(user, caption, images, location=None):
+    def create_post(user:User, caption:str, images:list, location:str)->Post:
         post = Post.objects.create(user=user, caption=caption, location=location)
         
         # Prepare a list of Album instances
@@ -30,38 +44,47 @@ class PostRepository:
         return post.save()
     
     @staticmethod
-    def get_post_by_user(user):
+    def get_post_by_user(user:User):
         return Post.objects.filter(user=user)
     
     @staticmethod
-    def update_post(post_id, caption=None, location=None):
-        post = Post.objects.get(id=post_id)
-        if caption:
-            post.caption = caption
-        if location:
-            post.location = location
-        post.save()
-        return post
-    
-    @staticmethod
-    def get_post_by_id(post_id):
+    def get_post_by_id(post_id:int):
         try:
             return Post.objects.get(pk=post_id)
+        except Exception as e:
+            raise ValidationError(detail=str(e))
+    
+    @staticmethod
+    def update_post(post_id:int, user:User, caption=None, location=None)->Post:
+        try:
+            post = Post.objects.get(id=post_id, user=user)
+            if caption:
+                post.caption = caption
+            if location:
+                post.location = location
+            post.save()
+            return post
         except Exception as e:
             raise ValidationError(detail=str(e))
         
     @staticmethod
-    def update_post_likes(post_id):
+    def update_post_likes(post_id:int, user:User)->Post:
         try:
-            post = Post.objects.filter(pk=post_id).update(likes=F('likes') + 1)
+            post = __class__.get_post_by_id(post_id)
+            # TODO: We should check user first
+            LikeRepository.create_like_user(user, post)
+            post.likes = F('likes') + 1
+            post.save()
             return Post.objects.get(pk=post_id)
+        except Post.DoesNotExist:
+            raise ValidationError("Post does not exist.")
         except Exception as e:
             raise ValidationError(detail=str(e))
 
     @staticmethod
-    def delete_post(post_id):
+    def delete_post(post_id, user):
         try:
-            Post.objects.filter(id=post_id).delete()
+            Post.objects.get(id=post_id, user=user).delete()
         except Exception as e:
             raise ValidationError(detail=str(e))
 
@@ -69,16 +92,16 @@ class PostRepository:
 class CommentRepository:
     @staticmethod
     def create_comment(post, user, body):
-        return Comment.objects.create(post=post, user=user, body=body)
+        return Comment.objects.create(post=post, user=user, body=body).save()
 
     @staticmethod
     def get_comments_by_post(post):
         return post.comments.all()
 
     @staticmethod
-    def update_comment(comment_id, body):
+    def update_comment(user, comment_id, body):
         try:
-            comment = Comment.objects.get(id=comment_id)
+            comment = Comment.objects.get(id=comment_id, user=user)
             comment.body = body
             comment.save()
             return comment
@@ -86,8 +109,8 @@ class CommentRepository:
             raise ValidationError(detail=str(e))
 
     @staticmethod
-    def delete_comment(comment_id):
+    def delete_comment(comment_id, user):
         try:
-            Comment.objects.filter(id=comment_id).delete()
+            Comment.objects.get(id=comment_id, user=user).delete()
         except Exception as e:
             raise ValidationError(detail=str(e))
