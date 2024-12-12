@@ -76,20 +76,22 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 
 # TODO: Database
-# TODO: We will have multiple databases
-# TODO: I will only use `Postgres`, you can use other databases
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-# https://docs.djangoproject.com/en/5.0/topics/db/multi-db/
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("DEFAULT_DB_NAME"),
-        'HOST': config('DEFAULT_DB_HOST'),
-        "USER": config("DEFAULT_DB_USER"),
-        "PASSWORD": config("DEFAULT_DB_PASSWORD"),
-    },
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": config("DEFAULT_DB_NAME"),
+#         'HOST': config('DEFAULT_DB_HOST'),
+#         "USER": config("DEFAULT_DB_USER"),
+#         "PASSWORD": config("DEFAULT_DB_PASSWORD"),
+#     },
+# }
 
 
 # Password validation
@@ -137,8 +139,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "user.User"
 
 
-MEDIA_URL  = '/media/'
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 STATIC_URL = 'static/'
