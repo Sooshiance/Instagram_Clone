@@ -1,6 +1,6 @@
 from django.db.models import F
 
-from rest_framework import exceptions
+from rest_framework.exceptions import ValidationError
 
 from .models import (Post,
                      Comment,
@@ -27,7 +27,7 @@ class PostRepository:
         else:
             print("No valid images to save in album.")
         
-        return post
+        return post.save()
     
     @staticmethod
     def get_post_by_user(user):
@@ -48,16 +48,22 @@ class PostRepository:
         try:
             return Post.objects.get(pk=post_id)
         except Exception as e:
-            raise exceptions.ValidationError(detail=str(e))
+            raise ValidationError(detail=str(e))
         
     @staticmethod
     def update_post_likes(post_id):
-        post = Post.objects.filter(pk=post_id).update(likes=F('likes') + 1)
-        return Post.objects.get(pk=post_id)
+        try:
+            post = Post.objects.filter(pk=post_id).update(likes=F('likes') + 1)
+            return Post.objects.get(pk=post_id)
+        except Exception as e:
+            raise ValidationError(detail=str(e))
 
     @staticmethod
     def delete_post(post_id):
-        Post.objects.filter(id=post_id).delete()
+        try:
+            Post.objects.filter(id=post_id).delete()
+        except Exception as e:
+            raise ValidationError(detail=str(e))
 
 
 class CommentRepository:
@@ -71,11 +77,17 @@ class CommentRepository:
 
     @staticmethod
     def update_comment(comment_id, body):
-        comment = Comment.objects.get(id=comment_id)
-        comment.body = body
-        comment.save()
-        return comment
+        try:
+            comment = Comment.objects.get(id=comment_id)
+            comment.body = body
+            comment.save()
+            return comment
+        except Exception as e:
+            raise ValidationError(detail=str(e))
 
     @staticmethod
     def delete_comment(comment_id):
-        Comment.objects.filter(id=comment_id).delete()
+        try:
+            Comment.objects.filter(id=comment_id).delete()
+        except Exception as e:
+            raise ValidationError(detail=str(e))
