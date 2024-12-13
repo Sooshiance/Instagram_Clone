@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Follower
+
+
+@admin.register(Follower)
+class FollowerAdmin(admin.ModelAdmin):
+    list_display = ['following', 'follower']

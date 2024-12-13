@@ -10,6 +10,8 @@ urlpatterns = [
     path("api/v1/user/", include("user.urls")),
 
     path("api/v1/post/", include("post.urls")),
+
+    path("api/v1/follow/", include("follow.urls")),
 ]
 
 

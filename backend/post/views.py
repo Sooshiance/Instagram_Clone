@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 
 from .serializers import (
     PostSerializer,
-    CommentSerializer
+    CommentSerializer,
 )
 from .repositories import (
     PostRepository,
@@ -46,7 +46,7 @@ class CreatePostView(views.APIView):
         user = self.request.user
         caption = request.data.get('caption')
         location = request.data.get('location')
-        images = request.FILES.getlist('images')
+        images = request.FILES.getlist('media')
         if not images:
             return response.Response({"error": "No images provided."}, status=status.HTTP_400_BAD_REQUEST)
         post = PostRepository.create_post(user, caption, images, location)

@@ -35,6 +35,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             'website',
             'location',
             'birth_date',
+            'is_private',
         ]
 
 

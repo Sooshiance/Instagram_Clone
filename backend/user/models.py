@@ -51,6 +51,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     # If email was sent, this flag will become `True`
     is_email     = models.BooleanField(default=False)
 
+    #
+    is_private   = models.BooleanField(default=False)
+
     is_active    = models.BooleanField(default=True, null=False)
     is_staff     = models.BooleanField(default=False, null=False)
     is_superuser = models.BooleanField(default=False, null=False)
@@ -87,6 +90,7 @@ class Profile(models.Model):
     website         = models.URLField(blank=True, null=True)
     location        = models.CharField(max_length=144, blank=True, null=True)
     birth_date      = models.DateField(blank=True, null=True)
+    is_private      = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username

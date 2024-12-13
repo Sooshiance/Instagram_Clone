@@ -18,6 +18,7 @@ def update_user(sender, instance, **kwargs):
     if instance.pk:
         user = instance.user
         user.username = instance.username
+        user.is_private = instance.is_private
         user.save()
 
 
