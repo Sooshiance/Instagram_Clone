@@ -1,6 +1,6 @@
 from django.db.models import F
 
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
 
 from .models import (Post,
                      Comment,
@@ -58,6 +58,8 @@ class PostRepository:
     def update_post(post_id:int, user:User, caption=None, location=None)->Post:
         try:
             post = Post.objects.get(id=post_id, user=user)
+            if post.user != user:
+                raise PermissionDenied("")
             if caption:
                 post.caption = caption
             if location:
@@ -84,7 +86,10 @@ class PostRepository:
     @staticmethod
     def delete_post(post_id, user):
         try:
-            Post.objects.get(id=post_id, user=user).delete()
+            post = __class__.get_post_by_id(post_id)
+            if post.user != user:
+                raise PermissionDenied("")
+            post.delete()
         except Exception as e:
             raise ValidationError(detail=str(e))
 
@@ -97,11 +102,20 @@ class CommentRepository:
     @staticmethod
     def get_comments_by_post(post):
         return post.comments.all()
+    
+    @staticmethod
+    def get_comment_by_id(comment_id):
+        try:
+            return Comment.objects.get(pk=comment_id)
+        except Exception as e:
+            raise ValidationError(str(e))
 
     @staticmethod
     def update_comment(user, comment_id, body):
         try:
-            comment = Comment.objects.get(id=comment_id, user=user)
+            comment = __class__.get_comment_by_id(comment_id)
+            if comment.user != user:
+                raise PermissionDenied("")
             comment.body = body
             comment.save()
             return comment
@@ -111,6 +125,9 @@ class CommentRepository:
     @staticmethod
     def delete_comment(comment_id, user):
         try:
-            Comment.objects.get(id=comment_id, user=user).delete()
+            comment = __class__.get_comment_by_id(comment_id)
+            if comment.user != user:
+                raise PermissionDenied("")
+            comment.delete()
         except Exception as e:
             raise ValidationError(detail=str(e))
