@@ -1,6 +1,6 @@
 import os
 
-from settings.base import DEBUG
+from backend.settings.base import DEBUG
 
 from celery import Celery
 

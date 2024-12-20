@@ -44,11 +44,16 @@ class CreatePostView(views.APIView):
 
     def post(self, request, *args, **kwargs):
         user = self.request.user
-        caption = request.data.get('caption')
-        location = request.data.get('location')
-        images = request.FILES.getlist('media')
+        caption = request.data.get("caption")
+        location = request.data.get("location")
+        images = request.FILES.getlist("images")
         if not images:
-            return response.Response({"error": "No images provided."}, status=status.HTTP_400_BAD_REQUEST)
+            print(caption)
+            print(location)
+            print(images)
+            return response.Response(
+                {"error": "No images provided."}, status=status.HTTP_400_BAD_REQUEST
+            )
         post = PostRepository.create_post(user, caption, images, location)
         post_serializer = PostSerializer(post)
         return response.Response(post_serializer.data, status=status.HTTP_201_CREATED)
@@ -76,7 +81,9 @@ class LikePostView(views.APIView):
             serializer = PostSerializer(post)
             return response.Response(serializer.data, status=status.HTTP_200_OK)
         except ValidationError as e:
-            return response.Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return response.Response(
+                {"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class UpdatePostView(views.APIView):
@@ -92,11 +99,13 @@ class UpdatePostView(views.APIView):
 
 
 class UpdateCommentView(views.APIView):
-    permission_classes= [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def patch(self, request, pk, *args, **kwargs):
         body = request.data.get("body")
-        updated_comment = CommentRepository.update_comment(self.request.user, comment_id=pk, body=body)
+        updated_comment = CommentRepository.update_comment(
+            self.request.user, comment_id=pk, body=body
+        )
         srz = CommentSerializer(updated_comment)
         return response.Response(srz.data, status=status.HTTP_200_OK)
 
