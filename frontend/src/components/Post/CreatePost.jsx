@@ -10,7 +10,7 @@ const CreatePost = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { caption, location } = useSelector((state) => state.post);
-    const [imageFiles, setImageFiles] = useState([]); // State for image files
+    const [imageFiles, setImageFiles] = useState([]);
 
     const handleCaptionChange = (e) => {
         dispatch(setCaption(e.target.value));
@@ -69,19 +69,34 @@ const CreatePost = () => {
         <>
             <Header />
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="caption">Caption:</label>
-                    <textarea id="caption" value={caption} onChange={handleCaptionChange} />
-                </div>
-                <div>
-                    <label htmlFor="location">Location:</label>
-                    <input type="text" id="location" value={location} onChange={handleLocationChange} />
-                </div>
-                <div>
-                    <label htmlFor="images">Images:</label>
-                    <input type="file" id="images" multiple onChange={handleImageChange} />
-                </div>
-                <button type="submit">Create Post</button>
+                <h2 className="text-xl font-semibold mb-4">Create a Post</h2>
+                <input
+                    type="text"
+                    placeholder="Caption"
+                    value={caption}
+                    onChange={handleCaptionChange}
+                    className="w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <input
+                    type="text"
+                    placeholder="Location"
+                    value={location}
+                    onChange={handleLocationChange}
+                    className="w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <input
+                    type="file"
+                    multiple
+                    onChange={handleImageChange}
+                    className="mb-4"
+                />
+                <button
+                    type="submit"
+                    className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+                >
+                    Create Post
+                </button>
+                {error && <p className="text-red-500 mt-4">{error}</p>}
             </form>
             <Footer />
         </>

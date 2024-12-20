@@ -7,9 +7,10 @@ from .models import User, Profile
 def create_profile(sender, instance, created, **kwargs):
     if created:
         user=instance
-        new_profile = Profile.objects.create(
+        Profile.objects.create(
             user=user,
             username= user.username,
+            is_private=user.is_private,
         )
 
 

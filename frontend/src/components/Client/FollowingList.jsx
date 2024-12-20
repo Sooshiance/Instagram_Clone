@@ -2,16 +2,13 @@ import React from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
 
-const PrivateAccount = () => {
-    // 
-
+const FollowingList = () => {
     return (
         <>
             <Header />
-            Private Account
             <Footer />
         </>
     )
 }
 
-export default PrivateAccount;
+export default FollowingList

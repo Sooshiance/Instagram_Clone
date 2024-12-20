@@ -1,8 +1,11 @@
 from rest_framework import views, status, permissions
 from rest_framework.response import Response
 
-from .repositories import FollowerRepository
-from .serializers import FollowerSerializer
+from .repositories import (
+    FollowerRepository,
+    NotificationRepositories,
+)
+from .serializers import FollowerSerializer, NotificationSerializer
 
 from user.models import User
 from user.serializers import UserSerializer
@@ -22,8 +25,8 @@ class FollowerView(views.APIView):
 
         # Prepare response data
         response_data = {
-            'followers': follower_serializer.data,
-            'following': following_serializer.data,
+            "followers": follower_serializer.data,
+            "following": following_serializer.data,
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
@@ -33,31 +36,57 @@ class FollowUserView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        following_id = request.data.get('following_id')
+        following_id = request.data.get("following_id")
         follower = self.request.user
-        
+
         try:
             following = User.objects.get(pk=following_id, is_private=False)
         except User.DoesNotExist:
-            return Response({"detail": "User to follow does not exist."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "User to follow does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
-        # Create a new follower relationship
         try:
-            follower_instance = FollowerRepository.create_follower(follower=follower, following=following)
+            follower_instance = FollowerRepository.create_follower(
+                follower=follower, following=following
+            )
             serializer = FollowerSerializer(follower_instance)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, *args, **kwargs):
-        following_id = request.data.get('following_id')
-        follower = self.request.user 
-        
+        following_id = request.data.get("following_id")
+        follower = self.request.user
+
         try:
             following = User.objects.get(pk=following_id)
         except User.DoesNotExist:
-            return Response({"detail": "User to unfollow does not exist."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "User to unfollow does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
-        # Remove the follower relationship
         FollowerRepository.remove_follower(follower=follower, following=following)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CreateNotification(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk, *args, **kwargs):
+        receiver = User.objects.get(pk=pk)
+        sender = self.request.user
+        NotificationRepositories.ask_fellowships(receiver, sender)
+        srz = NotificationSerializer(receiver, sender)
+        return Response(srz.data)
+
+
+class UserNotificationList(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user_list = NotificationRepositories.user_ask_for_following(self.request.user)
+        srz = UserSerializer(user_list, many=True)
+        return Response(srz.data)

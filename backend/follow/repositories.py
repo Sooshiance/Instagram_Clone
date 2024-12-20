@@ -1,6 +1,6 @@
 from rest_framework.exceptions import ValidationError
 
-from .models import Follower, User
+from .models import Follower, User, Notification
 
 
 class FollowerRepository:
@@ -17,7 +17,7 @@ class FollowerRepository:
         Returns a QuerySet of User instances who are being followed by the given user.
         """
         return User.objects.filter(follower_set__follower_id=user_id)
-    
+
     @staticmethod
     def get_user_following(following_id):
         try:
@@ -39,3 +39,19 @@ class FollowerRepository:
         Removes a follower relationship.
         """
         Follower.objects.filter(follower=follower, following=following).delete()
+
+
+class NotificationRepositories:
+    @staticmethod
+    def ask_fellowships(receiver: User, sender: User):
+        if receiver.is_private:
+            if Follower.objects.filter(receiver, sender) is None:
+                return Notification.objects.create(receiver, sender)
+            else:
+                raise ValidationError()
+        else:
+            raise ValidationError("How's that possible")
+
+    @staticmethod
+    def user_ask_for_following(receiver: User):
+        return Notification.objects.filter(receiver=receiver)
