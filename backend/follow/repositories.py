@@ -6,16 +6,10 @@ from .models import Follower, User, Notification
 class FollowerRepository:
     @staticmethod
     def get_followers_of_user(user_id):
-        """
-        Returns a QuerySet of User instances who are followers of the given user.
-        """
         return User.objects.filter(following_set__following_id=user_id)
 
     @staticmethod
     def get_following_of_user(user_id):
-        """
-        Returns a QuerySet of User instances who are being followed by the given user.
-        """
         return User.objects.filter(follower_set__follower_id=user_id)
 
     @staticmethod
@@ -28,16 +22,10 @@ class FollowerRepository:
 
     @staticmethod
     def create_follower(follower, following):
-        """
-        Creates a new follower relationship.
-        """
         return Follower.objects.create(follower=follower, following=following)
 
     @staticmethod
     def remove_follower(follower, following):
-        """
-        Removes a follower relationship.
-        """
         Follower.objects.filter(follower=follower, following=following).delete()
 
 

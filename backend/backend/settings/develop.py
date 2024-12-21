@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "follow.apps.FollowConfig",
     "post.apps.PostConfig",
     "story.apps.StoryConfig",
+    "explorer.apps.ExplorerConfig",
 ]
 
 MIDDLEWARE = [

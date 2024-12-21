@@ -1,4 +1,5 @@
 from rest_framework import views, status, permissions
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from .repositories import (
@@ -11,24 +12,37 @@ from user.models import User
 from user.serializers import UserSerializer
 
 
+class PrivateProfileView(views.APIView):
+    """
+    `Users` can see other `Profiles`
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist as e:
+            raise ValidationError(str(e))
+        if user.is_private:
+            return Response(
+                data={"error": "Profile is private"}, status=status.HTTP_204_NO_CONTENT
+            )
+        user_srz = UserSerializer(user)
+        return Response(data=user_srz.data, status=status.HTTP_200_OK)
+
+
 class FollowerView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        # Get followers and following
         followers = FollowerRepository.get_followers_of_user(self.request.user.pk)
         following = FollowerRepository.get_following_of_user(self.request.user.pk)
-
-        # Serialize followers and following
         follower_serializer = UserSerializer(followers, many=True)
         following_serializer = UserSerializer(following, many=True)
-
-        # Prepare response data
         response_data = {
             "followers": follower_serializer.data,
             "following": following_serializer.data,
         }
-
         return Response(response_data, status=status.HTTP_200_OK)
 
 
@@ -75,8 +89,12 @@ class FollowUserView(views.APIView):
 class CreateNotification(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, pk, *args, **kwargs):
-        receiver = User.objects.get(pk=pk)
+    def post(self, request, *args, **kwargs):
+        receiver_pk = request.data.get("pk", None)
+        try:
+            receiver = User.objects.get(pk=receiver_pk)
+        except User.DoesNotExist as e:
+            raise ValidationError(str(e))
         sender = self.request.user
         NotificationRepositories.ask_fellowships(receiver, sender)
         srz = NotificationSerializer(receiver, sender)

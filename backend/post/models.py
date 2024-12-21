@@ -7,6 +7,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     caption = models.TextField()
     likes = models.DecimalField(max_digits=15, decimal_places=0, default=0)
+    views = models.DecimalField(max_digits=15, decimal_places=0, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     location = models.CharField(max_length=255, blank=True, null=True)
