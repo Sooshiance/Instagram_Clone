@@ -11,6 +11,8 @@ import OTPRequest from './components/Auth/OTPRequest';
 import OTPVerify from './components/Auth/OTPVerify';
 import PasswordReset from './components/Auth/PasswordReset';
 import UserPost from './components/Post/UserPost';
+import PrivateAccount from './components/Client/PrivateAccount';
+import SeeProfiles from './components/Client/SeeProfiles';
 import CreatePost from './components/Post/CreatePost';
 import SinglePost from './components/Post/SinglePost';
 import NoPage from './components/NoPage';
@@ -54,6 +56,16 @@ function App() {
         <Route path="/user-post/:pk" element={
           <PrivateRoute>
             <SinglePost />
+          </PrivateRoute>
+        } />
+        <Route path="/private/profile/:pk" element={
+          <PrivateRoute>
+            <PrivateAccount />
+          </PrivateRoute>
+        } />
+        <Route path="/visit/profile/:pk" element={
+          <PrivateRoute>
+            <SeeProfiles />
           </PrivateRoute>
         } />
         <Route path='*' element={<NoPage />} />

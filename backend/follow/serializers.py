@@ -6,12 +6,12 @@ from user.models import User
 from user.serializers import UserSerializer
 
 
-class FollowerSerializer(serializers.ModelSerializer):
+class FollowerSerializer(serializers.ModelSerializer[Follower]):
     class Meta:
         model = Follower
         fields = ["pk", "follower", "following", "connected_at"]
 
-    def validate(self, attrs):
+    def validate(self, attrs: dict[str, str]) -> dict[str, str]:
         attrs = super().validate(attrs)
         follower: User = attrs.get("follower")
         following: User = attrs.get("following")
@@ -35,7 +35,7 @@ class FollowerSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class NotificationSerializer(serializers.ModelSerializer):
+class NotificationSerializer(serializers.ModelSerializer[Notification]):
     receiver = UserSerializer(read_only=True)
     sender = UserSerializer(read_only=True)
 

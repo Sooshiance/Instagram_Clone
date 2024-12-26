@@ -1,6 +1,7 @@
 from rest_framework import views, status, permissions
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
+from rest_framework.request import Request
 
 from .repositories import (
     FollowerRepository,
@@ -16,9 +17,12 @@ class PrivateProfileView(views.APIView):
     """
     `Users` can see other `Profiles`
     """
+
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, pk, *args, **kwargs):
+    def get(
+        self, request: Request, pk: str, *args: list[str], **kwargs: dict[str, str]
+    ) -> Response:
         try:
             user = User.objects.get(pk=pk)
         except User.DoesNotExist as e:
@@ -34,7 +38,9 @@ class PrivateProfileView(views.APIView):
 class FollowerView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
+    def get(
+        self, request: Request, pk: str, *args: list[str], **kwargs: dict[str, str]
+    ) -> Response:
         followers = FollowerRepository.get_followers_of_user(self.request.user.pk)
         following = FollowerRepository.get_following_of_user(self.request.user.pk)
         follower_serializer = UserSerializer(followers, many=True)
@@ -49,7 +55,9 @@ class FollowerView(views.APIView):
 class FollowUserView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
+    def post(
+        self, request: Request, pk: str, *args: list[str], **kwargs: dict[str, str]
+    ) -> Response:
         following_id = request.data.get("following_id")
         follower = self.request.user
 
