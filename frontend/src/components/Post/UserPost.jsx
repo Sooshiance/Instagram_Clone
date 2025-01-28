@@ -1,6 +1,4 @@
 import React from 'react';
-import Header from '../Header';
-import Footer from '../Footer';
 import { useQuery } from '@tanstack/react-query';
 import apiCall from '../../services/apiCall';
 import { useNavigate, Link } from 'react-router-dom';
@@ -36,7 +34,6 @@ const UserPost = () => {
 
     return (
         <>
-            <Header />
             {posts.map((post) => (
                 <div key={post.pk}>
                     <h3>{post.user.username}</h3>
@@ -45,7 +42,6 @@ const UserPost = () => {
                     <Link to={`/user-post/${post.pk}`}>See this Post</Link>
                 </div>
             ))}
-            <Footer />
         </>
     );
 };

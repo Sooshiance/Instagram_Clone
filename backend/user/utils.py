@@ -1,8 +1,7 @@
 import re
 
 
-def checkUsername(username:str):
-    
+def checkUsername(username: str):
     pattern1 = r"09\d{9}"
     pattern2 = r"[^@]+@[^@]+\.[^@]+"
 

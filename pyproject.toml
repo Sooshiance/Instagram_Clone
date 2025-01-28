@@ -1,0 +1,21 @@
+[ruff]
+line-length = 79
+select = ["E", "F", "W", "I", "Q", "E501"]
+ignore = []
+
+[ruff.format]
+quote-style = "double"
+
+# Keep your existing settings, and add:
+fix = true
+unfixable = []
+
+# Optional: Explicitly list rules for clarity (F401 = unused import)
+select = [
+  "E",   # Pycodestyle errors
+  "F",   # Pyflakes errors (includes F401 for unused imports)
+  "W",   # Pycodestyle warnings
+  "I",   # Isort (import sorting)
+  "Q",   # flake8-quotes
+  "F841" # Unused variable (optional but recommended)
+]

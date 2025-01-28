@@ -1,15 +1,15 @@
-from django.db.models.signals import post_save, pre_save, post_delete
+from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
 
-from .models import User, Profile
+from .models import Profile, User
 
 
 def create_profile(sender, instance, created, **kwargs):
     if created:
-        user=instance
+        user = instance
         Profile.objects.create(
             user=user,
-            username= user.username,
+            username=user.username,
             is_private=user.is_private,
         )
 

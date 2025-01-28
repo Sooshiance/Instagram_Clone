@@ -3,6 +3,7 @@ import Header from '../Header';
 import Footer from '../Footer';
 import apiCall from '../../services/apiCall';
 import { useNavigate } from 'react-router';
+import UserPost from '../Post/UserPost';
 
 const Profile = () => {
 
@@ -58,6 +59,7 @@ const Profile = () => {
             {profile ? (
                 <>
                     <Header />
+                    <UserPost />
                     <h1 className="">
                         {profile.username}
                     </h1>

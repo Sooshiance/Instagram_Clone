@@ -1,15 +1,14 @@
 from django.db import transaction
+from rest_framework.exceptions import PermissionDenied, ValidationError
 
-from rest_framework.exceptions import ValidationError, PermissionDenied
-
-from .models import Story, Reaction
+from .models import Reaction, Story
 
 
 class ReactionRepositories:
     @staticmethod
     def get_reaction(user, story):
         return Reaction.objects.filter(user, story).exists()
-    
+
     @staticmethod
     def create_reaction_user(user, story):
         if __class__.get_reaction(user, story):

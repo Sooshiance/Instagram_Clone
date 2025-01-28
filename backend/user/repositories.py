@@ -1,6 +1,6 @@
 from rest_framework.exceptions import ValidationError
 
-from .models import User, OTP, Profile
+from .models import OTP, User
 
 
 class UserRepository:

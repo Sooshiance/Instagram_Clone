@@ -11,6 +11,7 @@ const CreatePost = () => {
     const navigate = useNavigate();
     const { caption, location } = useSelector((state) => state.post);
     const [imageFiles, setImageFiles] = useState([]);
+    const [error, setError] = useState(null);
 
     const handleCaptionChange = (e) => {
         dispatch(setCaption(e.target.value));
@@ -61,6 +62,7 @@ const CreatePost = () => {
             console.error('Error creating post:', error);
             if (error.response) {
                 console.error("Error response:", error.response.data);
+                setError(error);
             }
         }
     };

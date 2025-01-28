@@ -22,8 +22,12 @@ class Follower(models.Model):
 
 
 class Notification(models.Model):
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE)
-    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    receiver = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="receiver_users"
+    )
+    sender = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="sender_users"
+    )
 
     class Meta:
         unique_together = [

@@ -1,24 +1,23 @@
-from datetime import datetime, timedelta
 import uuid
 
 from .models import User
-from .repositories import UserRepository, OTPRepository
-from .utils import checkUsername, sendPhoneOTP, sendEmailOTP
+from .repositories import OTPRepository, UserRepository
+from .utils import checkUsername, sendEmailOTP, sendPhoneOTP
 
 
 class UserService:
     @staticmethod
-    def get_user_by_pk(user:User):
+    def get_user_by_pk(user: User):
         return UserRepository.get_user_by_id(user.pk)
-    
+
     @staticmethod
     def get_user_by_username(username):
         return UserRepository.get_user_by_username(username)
-    
+
     @staticmethod
     def register_user(username, password):
         user_type = checkUsername(username)
-        user:User = UserRepository.create_user(username=username, password=password)
+        user: User = UserRepository.create_user(username=username, password=password)
         user.set_password(password)
         if user_type == "phone":
             user.is_phone = True
@@ -28,7 +27,7 @@ class UserService:
         return user
 
     @staticmethod
-    def send_otp(user:User):
+    def send_otp(user: User):
         otp = str(uuid.uuid4().int)[:6]
         print(f"The OTP ===== {otp}")
         OTPRepository.create_otp(user, otp)
@@ -40,10 +39,10 @@ class UserService:
     @staticmethod
     def verify_otp(user, otp):
         otp_record = OTPRepository.get_otp(user, otp)
-        return otp_record 
+        return otp_record
 
     @staticmethod
-    def create_password_reset_otp(user:User):
+    def create_password_reset_otp(user: User):
         otp = str(uuid.uuid4().int)[:6]
         print(f"OTP ================ {otp}")
         OTPRepository.create_otp(user, otp)
